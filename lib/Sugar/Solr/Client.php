@@ -52,10 +52,72 @@ class Client implements ClientInterface
      * ドキュメントの検索
      *
      * @param array $query クエリ配列
+     * @return array
      */
     public function select(array $query)
     {
-        $this->_request('select', $query);
+        return $this->_request('select', $query);
+    }
+
+    /**
+     * ドキュメントの追加・更新
+     *
+     * @param array $query クエリ配列
+     * @return array
+     */
+    public function update(array $query)
+    {
+        return $this->_request('update', $query);
+    }
+
+    /**
+     * ヘルスチェック
+     *
+     * @return array
+     */
+    public function ping()
+    {
+        return $this->_request('update', []);
+    }
+
+    /**
+     * バイナリファイルのアップロード
+     *
+     * @return array
+     */
+    public function extract()
+    {
+        return $this->_request('extract', []);
+    }
+
+    /**
+     * スレッドダンプ
+     *
+     * @return array
+     */
+    public function threads()
+    {
+        return $this->_request('threads', []);
+    }
+
+    /**
+     * スレッドダンプ
+     *
+     * @return array
+     */
+    public function threads()
+    {
+        return $this->_request('threads', []);
+    }
+
+    /**
+     * システム情報
+     *
+     * @return array
+     */
+    public function system()
+    {
+        return $this->_request('system', []);
     }
 
     /**
@@ -71,6 +133,20 @@ class Client implements ClientInterface
             case 'select':
                 $request = new Request\Select($this, new Transport\Curl());
             break;
+            case 'update':
+                $request = new Request\Update($this, new Transport\Curl());
+            break;
+            case 'ping':
+                $request = new Request\Ping($this, new Transport\Curl());
+            break;
+            case 'extract':
+                $request = new Request\Extract($this, new Transport\Curl());
+            break;
+            case 'threads':
+                $request = new Request\Threads($this, new Transport\Curl());
+            break;
+            case 'system':
+                $request = new Request\System($this, new Transport\Curl());
         }
 
         $request->exec($query);
