@@ -62,12 +62,12 @@ class Client implements ClientInterface
     /**
      * ドキュメントの追加・更新
      *
-     * @param array $query クエリ配列
+     * @param string $document ドキュメント(XML, JSON文字列)
      * @return array
      */
-    public function update(array $query)
+    public function update($document)
     {
-        return $this->_request('update', $query);
+        return $this->_request('update', $document);
     }
 
     /**
@@ -101,16 +101,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * スレッドダンプ
-     *
-     * @return array
-     */
-    public function threads()
-    {
-        return $this->_request('threads', []);
-    }
-
-    /**
      * システム情報
      *
      * @return array
@@ -124,10 +114,10 @@ class Client implements ClientInterface
      * リクエスト
      *
      * @param string $type リクエスト
-     * @param array $query クエリ配列
+     * @param mixed $query クエリ配列
      * @return void
      */
-    private function _request($type, array $query)
+    private function _request($type, $query)
     {
         switch ($type) {
             case 'select':

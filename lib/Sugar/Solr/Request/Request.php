@@ -49,10 +49,10 @@ abstract class Request implements RequestInterface
     /**
      * リクエスト
      *
-     * @param array $query クエリ配列
+     * @param mixed $query クエリ配列
      * @return mixed
      */
-    abstract public function exec(array $query);
+    abstract public function exec($query);
 
     /**
      * リクエスト先URLを生成する

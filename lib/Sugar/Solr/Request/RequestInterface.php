@@ -12,8 +12,8 @@ interface RequestInterface
     /**
      * リクエスト
      *
-     * @param array $query クエリ配列
+     * @param mixed $query クエリ配列
      * @return mixed
      */
-    public function exec(array $query);
+    public function exec($query);
 }
