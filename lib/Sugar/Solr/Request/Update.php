@@ -26,5 +26,9 @@ class Update extends Request
      */
     public function exec($document)
     {
+        if (is_string($document)) {
+            throw new RequestException('Invalid parameter type.');
+        }
+
     }
 }
