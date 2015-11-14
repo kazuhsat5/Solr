@@ -53,6 +53,7 @@ class Client implements ClientInterface
      *
      * @param array $query クエリ配列
      * @return array
+     * @throws ClientException
      */
     public function select(array $query)
     {
@@ -64,6 +65,7 @@ class Client implements ClientInterface
      *
      * @param string $document ドキュメント(XML, JSON文字列)
      * @return array
+     * @throws ClientException
      */
     public function update($document)
     {
@@ -74,6 +76,7 @@ class Client implements ClientInterface
      * ヘルスチェック
      *
      * @return array
+     * @throws ClientException
      */
     public function ping()
     {
@@ -84,6 +87,7 @@ class Client implements ClientInterface
      * バイナリファイルのアップロード
      *
      * @return array
+     * @throws ClientException
      */
     public function extract()
     {
@@ -94,6 +98,7 @@ class Client implements ClientInterface
      * スレッドダンプ
      *
      * @return array
+     * @throws ClientException
      */
     public function threads()
     {
@@ -104,6 +109,7 @@ class Client implements ClientInterface
      * システム情報
      *
      * @return array
+     * @throws ClientException
      */
     public function system()
     {
@@ -116,30 +122,35 @@ class Client implements ClientInterface
      * @param string $type リクエスト
      * @param mixed $query クエリ配列
      * @return void
+     * @throws ClientException
      */
     private function _request($type, $query)
     {
-        switch ($type) {
-            case 'select':
-                $request = new Request\Select($this, new Transport\Curl());
-            break;
-            case 'update':
-                $request = new Request\Update($this, new Transport\Curl());
-            break;
-            case 'ping':
-                $request = new Request\Ping($this, new Transport\Curl());
-            break;
-            case 'extract':
-                $request = new Request\Extract($this, new Transport\Curl());
-            break;
-            case 'threads':
-                $request = new Request\Threads($this, new Transport\Curl());
-            break;
-            case 'system':
-                $request = new Request\System($this, new Transport\Curl());
-        }
+        try {
+            switch ($type) {
+                case 'select':
+                    $request = new Request\Select($this, new Transport\Curl());
+                break;
+                case 'update':
+                    $request = new Request\Update($this, new Transport\Curl());
+                break;
+                case 'ping':
+                    $request = new Request\Ping($this, new Transport\Curl());
+                break;
+                case 'extract':
+                    $request = new Request\Extract($this, new Transport\Curl());
+                break;
+                case 'threads':
+                    $request = new Request\Threads($this, new Transport\Curl());
+                break;
+                case 'system':
+                    $request = new Request\System($this, new Transport\Curl());
+            }
 
-        $request->exec($query);
+            $request->exec($query);
+        } catch (Exception $e) {
+            throw new ClientException($e->getMessage());
+        }
     }
 
     // getter
