@@ -56,9 +56,11 @@ abstract class Request implements RequestInterface
      */
     public function exec($query)
     {
-        $result = $this->_getData($this->_createUrl($query));
+        $url = $this->_createUrl($query);
+
+        $result = $this->_getData($url);
         if ($result === false) {
-            throw new RequestException('');
+            throw new RequestException(printf('failed getting response.[url=%s]', $url));
         }
 
         return $result;
@@ -86,9 +88,28 @@ abstract class Request implements RequestInterface
      *
      * @param string $url URL
      * @return array
+     * @throws RequestException
      */
     private function _getData($url)
     {
-        return json_decode($this->_transport->exec($url), true);
+        return $this->_decode($this->_transport->exec($url), true);
+    }
+
+    /**
+     * JSONデコード
+     * SolrからのレスポンスをJSONに固定しているのでRequestクラス内にメソッド作成
+     *
+     * @param string $string JSON文字列
+     * @return array
+     * @throws RequestException
+     */
+    private function _decode($string)
+    {
+        $result = json_decode($string, true);
+        if (is_null($result)) {
+            throw new RequestException('failed to decode JSON.');
+        }
+
+        return $result;
     }
 }
