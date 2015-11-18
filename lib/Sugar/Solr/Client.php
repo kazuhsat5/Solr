@@ -147,7 +147,7 @@ class Client implements ClientInterface
                     $request = new Request\System($this, new Transport\Curl());
             }
 
-            $request->exec($query);
+            return $request->exec($query);
         } catch (Exception $e) {
             throw new ClientException($e->getMessage());
         }
