@@ -6,11 +6,11 @@ use Sugar\Solr;
 use Sugar\Solr\Transport;
 
 /**
- * リクエストファクトリ
+ * ファクトリ
  *
  * @author kazuhsat <kazuhsat555@gmail.com>
  */
-class RequestFactory
+class Factory implements FactoryInterface
 {
     /**
      * トランスポートインスタンス
@@ -31,7 +31,7 @@ class RequestFactory
     }
 
     /**
-     * インスタンスの生成
+     * リクエスト
      *
      * @param ClientInterface $client クライアントインスタンス
      * @param string $type リクエストタイプ
