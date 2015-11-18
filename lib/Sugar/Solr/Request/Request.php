@@ -11,7 +11,7 @@ use Sugar\Solr\Format;
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
-abstract class Request
+abstract class Request implements RequestInterface
 {
     /**
      * リクエスト名
