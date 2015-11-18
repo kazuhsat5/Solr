@@ -153,7 +153,7 @@ class Client implements ClientInterface
         }
     }
 
-    // getter
+    // accessor
     public function getHost()
     {
         return $this->_host;
