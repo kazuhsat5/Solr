@@ -34,6 +34,13 @@ class Client implements ClientInterface
     private $_core;
 
     /**
+     * リクエストファクトリインスタンス
+     *
+     * @var
+     */
+    private $_factory;
+
+    /**
      * コンストラクタ
      *
      * @param string $host ホスト名
@@ -46,6 +53,9 @@ class Client implements ClientInterface
         $this->_host = $host;
         $this->_core = $core;
         $this->_port = $port;
+
+        // リクエストファクトリインスタンス生成
+        $this->_factory = new Request\RequestFactory(new Transport\Curl());
     }
 
     /**
@@ -57,7 +67,7 @@ class Client implements ClientInterface
      */
     public function select(array $query)
     {
-        return $this->_request('select', $query);
+        return $this->_factory->request('select', $this, $query);
     }
 
     /**
@@ -69,7 +79,6 @@ class Client implements ClientInterface
      */
     public function update($document)
     {
-        return $this->_request('update', $document);
     }
 
     /**
@@ -80,7 +89,6 @@ class Client implements ClientInterface
      */
     public function ping()
     {
-        return $this->_request('update', []);
     }
 
     /**
@@ -91,7 +99,6 @@ class Client implements ClientInterface
      */
     public function extract()
     {
-        return $this->_request('extract', []);
     }
 
     /**
@@ -102,7 +109,6 @@ class Client implements ClientInterface
      */
     public function threads()
     {
-        return $this->_request('threads', []);
     }
 
     /**
@@ -113,45 +119,6 @@ class Client implements ClientInterface
      */
     public function system()
     {
-        return $this->_request('system', []);
-    }
-
-    /**
-     * リクエスト
-     *
-     * @param string $type リクエスト
-     * @param mixed $query クエリ配列
-     * @return void
-     * @throws ClientException
-     */
-    private function _request($type, $query)
-    {
-        try {
-            switch ($type) {
-                case 'select':
-                    $request = new Request\Select($this, new Transport\Curl());
-                    break;
-                case 'update':
-                    $request = new Request\Update($this, new Transport\Curl());
-                    break;
-                case 'ping':
-                    $request = new Request\Ping($this, new Transport\Curl());
-                    break;
-                case 'extract':
-                    $request = new Request\Extract($this, new Transport\Curl());
-                    break;
-                case 'threads':
-                    $request = new Request\Threads($this, new Transport\Curl());
-                    break;
-                case 'system':
-                    $request = new Request\System($this, new Transport\Curl());
-            }
-
-            return $request->exec($query);
-        } catch (Exception $e) {
-            // すべての例外をClientExceptionに統一
-            throw new ClientException($e->getMessage());
-        }
     }
 
     // accessor
