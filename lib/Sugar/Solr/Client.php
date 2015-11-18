@@ -130,19 +130,19 @@ class Client implements ClientInterface
             switch ($type) {
                 case 'select':
                     $request = new Request\Select($this, new Transport\Curl());
-                break;
+                    break;
                 case 'update':
                     $request = new Request\Update($this, new Transport\Curl());
-                break;
+                    break;
                 case 'ping':
                     $request = new Request\Ping($this, new Transport\Curl());
-                break;
+                    break;
                 case 'extract':
                     $request = new Request\Extract($this, new Transport\Curl());
-                break;
+                    break;
                 case 'threads':
                     $request = new Request\Threads($this, new Transport\Curl());
-                break;
+                    break;
                 case 'system':
                     $request = new Request\System($this, new Transport\Curl());
             }
