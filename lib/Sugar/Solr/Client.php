@@ -149,6 +149,7 @@ class Client implements ClientInterface
 
             return $request->exec($query);
         } catch (Exception $e) {
+            // すべての例外をClientExceptionに統一
             throw new ClientException($e->getMessage());
         }
     }
