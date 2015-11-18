@@ -4,13 +4,14 @@ namespace Sugar\Solr\Request;
 
 use Sugar\Solr;
 use Sugar\Solr\Transport;
+use Sugar\Solr\Format;
 
 /**
  * リクエスト基底クラス
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
-abstract class Request implements RequestInterface
+abstract class Request
 {
     /**
      * リクエスト名
@@ -49,31 +50,45 @@ abstract class Request implements RequestInterface
     /**
      * リクエスト
      *
-     * @param mixed $query クエリ配列
+     * @param array $query クエリ配列
      * @return mixed
+     * @throw RequestException
      */
-    abstract public function exec($query);
+    public function exec($query)
+    {
+        $result = $this->_getData($this->_createUrl($query));
+        if ($result === false) {
+            throw new RequestException('');
+        }
+
+        return $result;
+    }
 
     /**
      * リクエスト先URLを生成する
      *
      * @param array $query クエリ配列
-     * @return string
+     * @return string JSON文字列
      */
-    protected function _createUrl(array $query)
+    protected function _createUrl(array $query = [])
     {
-        return sprintf('http://%s:%s/solr/%s/%s?%s', $this->_client->getHost(),
-            $this->_client->getPort(), $this->_client->getCore(), $this->_request, http_build_query($query));
+        $url = sprintf('http://%s:%s/solr/%s/%s', $this->_client->getHost(),
+            $this->_client->getPort(), $this->_client->getCore(), $this->_request);
+
+        // JSON形式でレスポンスを受け取る
+        $query['wt'] = 'json';
+
+        return $url .= '?' . http_build_query($query);
     }
 
     /**
-     * URLアクセス
+     * データを取得する
      *
      * @param string $url URL
      * @return array
      */
-    protected function getData($url)
+    private function _getData($url)
     {
-        return $this->_transport->exec($url);
+        return json_decode($this->_transport->exec($url), true);
     }
 }

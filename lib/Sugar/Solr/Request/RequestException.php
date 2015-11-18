@@ -2,6 +2,8 @@
 
 namespace Sugar\Solr\Request;
 
+use Sugar\Solr;
+
 /**
  * リクエスト例外クラス
  *
