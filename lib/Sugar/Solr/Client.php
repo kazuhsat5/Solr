@@ -55,7 +55,7 @@ class Client implements ClientInterface
         $this->_port = $port;
 
         // リクエストファクトリインスタンス生成
-        $this->_factory = new Request\RequestFactory(new Transport\Curl());
+        $this->_factory = new Request\Factory(new Transport\Curl());
     }
 
     /**
