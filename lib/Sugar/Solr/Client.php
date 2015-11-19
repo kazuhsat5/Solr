@@ -127,7 +127,11 @@ class Client implements ClientInterface
         try {
             // SolrレスポンスをJSON形式で受け取りPHP配列で返却
             $query['wt'] = 'json';
+
+            // インスタンス生成
             $this->_factory->create($type);
+
+            // リクエスト
             return Format\Json::decode($this->_factory->request($query));
         } catch (Exception $e) {
             // 例外集約
