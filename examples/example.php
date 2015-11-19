@@ -1,10 +1,20 @@
 <?php
 
-require_once __DIR__ . '/bootstrap.php';
+define('HOST', 'localhost');
+define('CORE', 'test');
+define('PORT', 8983);
+
+require_once './bootstrap.php';
 
 use Sugar\Solr;
 
-$client = new Solr\Client('localhost', 'test', 8983);
+$client = new Solr\Client(HOST, CORE, PORT);
 
-$query = ['q' => 'name:sato'];
-$client->select($query);
+// select
+var_dump($client->select(['q' => 'name:sato']));
+
+// ping
+//var_dump($client->ping());
+
+//system
+//var_dump($client->system());
