@@ -4,9 +4,11 @@ namespace Sugar\Solr;
 
 use Sugar\Solr\Request;
 use Sugar\Solr\Transport;
+use Sugar\Solr\Format;
 
 /**
  * クライアントクラス
+ * Solrクライアントサービス(ファサード)クラス
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
@@ -20,13 +22,6 @@ class Client implements ClientInterface
     private $_host;
 
     /**
-     * ポート番号
-     *
-     * @var
-     */
-    private $_port;
-
-    /**
      * コア名
      *
      * @var
@@ -34,7 +29,14 @@ class Client implements ClientInterface
     private $_core;
 
     /**
-     * リクエストファクトリインスタンス
+     * ポート番号
+     *
+     * @var
+     */
+    private $_port;
+
+    /**
+     * ファクトリインスタンス
      *
      * @var
      */
@@ -45,7 +47,7 @@ class Client implements ClientInterface
      *
      * @param string $host ホスト名
      * @param string $core コア名
-     * @param integer $port ポート番号(デフォルトで8983)
+     * @param integer $port ポート番号(デフォルト:8983)
      * @return void
      */
     public function __construct($host, $core, $port = 8983)
@@ -54,8 +56,7 @@ class Client implements ClientInterface
         $this->_core = $core;
         $this->_port = $port;
 
-        // リクエストファクトリインスタンス生成
-        $this->_factory = new Request\Factory(new Transport\Curl());
+        $this->_factory = new Request\Factory($this, new Transport\Curl());
     }
 
     /**
@@ -67,7 +68,7 @@ class Client implements ClientInterface
      */
     public function select(array $query)
     {
-        return $this->_factory->request('select', $this, $query);
+        return $this->_request('select', $query);
     }
 
     /**
@@ -89,6 +90,7 @@ class Client implements ClientInterface
      */
     public function ping()
     {
+        return $this->_request('ping');
     }
 
     /**
@@ -102,16 +104,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * スレッドダンプ
-     *
-     * @return array
-     * @throws ClientException
-     */
-    public function threads()
-    {
-    }
-
-    /**
      * システム情報
      *
      * @return array
@@ -119,19 +111,47 @@ class Client implements ClientInterface
      */
     public function system()
     {
+        return $this->_request('system');
     }
 
-    // accessor
+    /**
+     * リクエスト
+     *
+     * @param string $type タイプ
+     * @param array $query クエリ配列
+     * @return array
+     * @throws ClientException
+     */
+    private function _request($type, $query = [])
+    {
+        try {
+            // SolrレスポンスをJSON形式で受け取りPHP配列で返却
+            $query['wt'] = 'json';
+            $this->_factory->create($type);
+            return Format\Json::decode($this->_factory->request($query));
+        } catch (Exception $e) {
+            // 例外集約
+            throw new ClientException($e->getMessage());
+        }
+    }
+
     public function getHost()
     {
         return $this->_host;
     }
-    public function getPort()
-    {
-        return $this->_port;
-    }
+
     public function getCore()
     {
         return $this->_core;
+    }
+
+    public function getPort()
+    {
+        return (int) $this->_port;
+    }
+
+    public function setFactory(Request\FactoryInterface $factory)
+    {
+        $this->_factory = $factory;
     }
 }

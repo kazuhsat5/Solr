@@ -3,6 +3,7 @@
 namespace Sugar\Solr\Request;
 
 use Sugar\Solr;
+use Sugar\Solr\Transport;
 
 /**
  * ファクトリインターフェース
@@ -12,12 +13,18 @@ use Sugar\Solr;
 interface FactoryInterface
 {
     /**
+     * インスタンス生成
+     *
+     * @param string $type リクエストタイプ
+     * @return Factory
+     */
+    public function create($type);
+
+    /**
      * リクエスト
      *
-     * @param ClientInterface $client クライアントインスタンス
-     * @param string $type リクエストタイプ
-     * @param array $query クエリ
+     * @param mixed $arg 引数
      * @return array
      */
-    public function request($type, Solr\ClientInterface $client, $query);
+    public function request($arg);
 }

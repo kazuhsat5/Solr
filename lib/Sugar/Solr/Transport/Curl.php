@@ -14,6 +14,7 @@ class Curl extends Transport
      *
      * @param string $url URL
      * @return array
+     * @throw TransportException cURL実行失敗時
      */
     public static function exec($url)
     {
@@ -26,7 +27,14 @@ class Curl extends Transport
 
         $result = curl_exec($ch);
 
+        $errno = curl_error($ch);
+
         curl_close($ch);
+
+        if (curl_errno($ch)) {
+            throw new TransportException(sprintf('curl error.[url=%s][errno=%d]',
+                $url, curl_error($ch)));
+        }
 
         return $result;
     }

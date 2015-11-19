@@ -25,7 +25,7 @@ abstract class Request implements RequestInterface
      *
      * @var
      */
-    protected $_client;
+    private $_client;
 
     /**
      * トランスポートインタスタンス
@@ -38,12 +38,12 @@ abstract class Request implements RequestInterface
      * コンストラクタ
      *
      * @param Client $client Clientクラス
+     * @param Transport $transport Transportクラス
      * @return void
      */
     public function __construct(Solr\Client $client, Transport\Transport $transport)
     {
         $this->_client = $client;
-
         $this->_transport = $transport;
     }
 
@@ -54,11 +54,11 @@ abstract class Request implements RequestInterface
      * @return mixed
      * @throw RequestException
      */
-    public function exec($query)
+    public function exec(array $query = [])
     {
         $url = $this->_createUrl($query);
 
-        $result = $this->_getData($url);
+        $result = $this->_transport->exec($url);
         if ($result === false) {
             throw new RequestException(printf('failed getting response.[url=%s]', $url));
         }
@@ -69,6 +69,7 @@ abstract class Request implements RequestInterface
     /**
      * リクエスト先URLを生成する
      *
+     * @see _decode()
      * @param array $query クエリ配列
      * @return string JSON文字列
      */
@@ -77,39 +78,6 @@ abstract class Request implements RequestInterface
         $url = sprintf('http://%s:%s/solr/%s/%s', $this->_client->getHost(),
             $this->_client->getPort(), $this->_client->getCore(), $this->_request);
 
-        // JSON形式でレスポンスを受け取る
-        $query['wt'] = 'json';
-
-        return $url .= '?' . http_build_query($query);
-    }
-
-    /**
-     * データを取得する
-     *
-     * @param string $url URL
-     * @return array
-     * @throws RequestException
-     */
-    private function _getData($url)
-    {
-        return $this->_decode($this->_transport->exec($url), true);
-    }
-
-    /**
-     * JSONデコード
-     * SolrからのレスポンスをJSONに固定しているのでRequestクラス内にメソッド作成
-     *
-     * @param string $string JSON文字列
-     * @return array
-     * @throws RequestException
-     */
-    private function _decode($string)
-    {
-        $result = json_decode($string, true);
-        if (is_null($result)) {
-            throw new RequestException('failed to decode JSON.');
-        }
-
-        return $result;
+        return $url . '?' . http_build_query($query);
     }
 }
