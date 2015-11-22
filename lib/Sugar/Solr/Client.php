@@ -10,7 +10,6 @@ namespace Sugar\Solr;
 
 use Sugar\Solr\Request;
 use Sugar\Solr\Transport;
-use Sugar\Solr\Format;
 
 /**
  * Client Class
@@ -68,7 +67,7 @@ class Client implements ClientInterface
      * __call
      *
      * @param string $name method
-     * @param array $arguments argumetns
+     * @param array $arguments arguments
      * @return array
      * @throws ClientException
      */
