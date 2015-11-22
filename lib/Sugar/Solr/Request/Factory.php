@@ -91,7 +91,7 @@ class Factory implements FactoryInterface
      * @param mixed $arg argument
      * @return array
      */
-    public function request($arg)
+    public function exec($arg)
     {
         return $this->_request->exec($arg);
     }

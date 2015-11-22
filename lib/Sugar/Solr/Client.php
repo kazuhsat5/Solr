@@ -41,11 +41,18 @@ class Client implements ClientInterface
     private $_port;
 
     /**
-     * factory
+     * request factory
      *
      * @var
      */
-    private $_factory;
+    private $_request;
+
+    /**
+     * format
+     *
+     * @var
+     */
+    private $_format;
 
     /**
      * constructor
@@ -53,15 +60,18 @@ class Client implements ClientInterface
      * @param string $host host
      * @param string $core core
      * @param integer $port port(default: 8983)
+     * @param string $format format
      * @return void
      */
-    public function __construct($host, $core, $port = 8983)
+    public function __construct($host, $core, $port = 8983, $format = 'json')
     {
         $this->_host = $host;
         $this->_core = $core;
         $this->_port = $port;
 
-        $this->_factory = new Request\Factory($this, new Transport\Curl());
+        $this->_request = new Request\Factory($this, new Transport\Curl());
+
+        $this->_format = $format;
     }
 
     /**
@@ -75,17 +85,28 @@ class Client implements ClientInterface
     public function __call($name, $arguments)
     {
         try {
-            $arguments[0]['wt'] = 'json';   # return JSON from api
+            $arguments[0]['wt'] = $this->_format;
 
-            $result = json_decode($this->_factory->create($name)->request($arguments[0]), true);
-            if (is_null($result)) {
-                throw FormatException(sprintf('request failed.[request=%s]', $name));
-            }
-
-            return $result;
+            return $this->_decode($this->_request->create($name)->exec($arguments[0]), true);
         } catch (Exception $e) {
             throw new ClientException($e->getMessage());
         }
+    }
+
+    /**
+     * decode
+     *
+     * @param string $data data
+     * @return array
+     */
+    private function _decode($data)
+    {
+        $class = __NAMESPACE__ . '\Format\\' . ucfirst($this->_format);
+        if (!class_exists($class)) {
+            throw new ClassNotFoundException(sprintf('class not found.[class=%s]'));
+        }
+
+        return $class::decode($data);
     }
 
     public function getHost()
@@ -106,5 +127,10 @@ class Client implements ClientInterface
     public function setFactory(Request\FactoryInterface $factory)
     {
         $this->_factory = $factory;
+    }
+
+    public function setFormat($format)
+    {
+        $this->_format = $format;
     }
 }

@@ -9,11 +9,11 @@
 namespace Sugar\Solr;
 
 /**
- * ClientException
+ * ClassNotFoundException
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
-class ClientException extends Exception
+class ClassNotFoundException extends Exception
 {
     //
 }
