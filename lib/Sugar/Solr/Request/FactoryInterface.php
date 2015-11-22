@@ -21,7 +21,7 @@ interface FactoryInterface
     /**
      * create instance
      *
-     * @param string $type リクエストタイプ
+     * @param string $type request type
      * @return Factory
      */
     public function create($type);
@@ -29,7 +29,7 @@ interface FactoryInterface
     /**
      * execute request
      *
-     * @param mixed $arg 引数
+     * @param mixed $arg argument
      * @return array
      */
     public function exec($arg);
