@@ -59,7 +59,7 @@ class Client implements ClientInterface
      *
      * @param string $host host
      * @param string $core core
-     * @param integer $port port(default: 8983)
+     * @param integer $port port (default: 8983)
      * @param string $format format
      * @return void
      */
@@ -115,7 +115,7 @@ class Client implements ClientInterface
      */
     private function _decode($data)
     {
-        $class = 'Solr\Sugar\Format\\' . ucfirst($this->_format);
+        $class = 'Sugar\Solr\Format\\' . ucfirst($this->_format);
         if (!class_exists($class)) {
             throw new ClassNotFoundException(sprintf('class not found.[class=%s]', $class));
         }
