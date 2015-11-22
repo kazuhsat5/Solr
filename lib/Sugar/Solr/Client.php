@@ -41,18 +41,11 @@ class Client implements ClientInterface
     private $_port;
 
     /**
-     * request factory
+     * request
      *
      * @var
      */
     private $_request;
-
-    /**
-     * format
-     *
-     * @var
-     */
-    private $_format;
 
     /**
      * constructor
@@ -60,18 +53,15 @@ class Client implements ClientInterface
      * @param string $host host
      * @param string $core core
      * @param integer $port port (default: 8983)
-     * @param string $format format
      * @return void
      */
-    public function __construct($host, $core, $port = 8983, $format = 'json')
+    public function __construct($host, $core, $port = 8983)
     {
         $this->_host = $host;
         $this->_core = $core;
         $this->_port = $port;
 
         $this->_request = new Request\Factory($this, new Transport\Curl());
-
-        $this->_format = $format;
     }
 
     /**
@@ -85,9 +75,9 @@ class Client implements ClientInterface
     public function __call($name, $arguments)
     {
         try {
-            $arguments[0]['wt'] = $this->_format;
+            $arguments[0]['wt'] = 'json';
 
-            return $this->_decode($this->_getData($name, $arguments[0]));
+            return json_decode($this->_getData($name, $arguments[0]), true);
         } catch (Exception $e) {
             throw new ClientException($e->getMessage());
         }
@@ -104,23 +94,6 @@ class Client implements ClientInterface
     private function _getData($request, $params)
     {
         return $this->_request->create($request)->exec($params);
-    }
-
-    /**
-     * decode
-     *
-     * @param string $data data
-     * @return array
-     * @throws FormatException
-     */
-    private function _decode($data)
-    {
-        $class = 'Sugar\Solr\Format\\' . ucfirst($this->_format);
-        if (!class_exists($class)) {
-            throw new ClassNotFoundException(sprintf('class not found.[class=%s]', $class));
-        }
-
-        return $class::decode($data);
     }
 
     public function getHost()
@@ -141,10 +114,5 @@ class Client implements ClientInterface
     public function setFactory(Request\FactoryInterface $factory)
     {
         $this->_factory = $factory;
-    }
-
-    public function setFormat($format)
-    {
-        $this->_format = $format;
     }
 }
