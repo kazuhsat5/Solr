@@ -26,15 +26,8 @@ class Curl extends Transport
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $result = curl_exec($ch);
-
-        $errno = curl_error($ch);
-
+var_dump($result);
         curl_close($ch);
-
-        if (curl_errno($ch)) {
-            throw new TransportException(sprintf('curl error.[url=%s][errno=%d]',
-                $url, curl_error($ch)));
-        }
 
         return $result;
     }

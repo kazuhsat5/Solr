@@ -1,18 +1,24 @@
 <?php
 
+/**
+ * PHP Solr Client
+ *
+ * @copyright Copyright (C) 2015 kazuhsat All Rights Reserved.
+ */
+
 namespace Sugar\Solr\Request;
 
 /**
- * systemクラス
+ * System
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
 class System extends Request
 {
     /**
-     * リクエスト名
+     * path
      *
      * @var
      */
-    protected $_request = 'admin/system';
+    protected $_path = 'admin/system';
 }

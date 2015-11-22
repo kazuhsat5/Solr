@@ -1,19 +1,25 @@
 <?php
 
+/**
+ * PHP Solr Client
+ *
+ * @copyright Copyright (C) 2015 kazuhsat All Rights Reserved.
+ */
+
 namespace Sugar\Solr\Request;
 
 use Sugar\Solr;
 use Sugar\Solr\Transport;
 
 /**
- * ファクトリインターフェース
+ * Factory Interface
  *
  * @author kazuhsat <kazuhsat555@gmail.com>
  */
 interface FactoryInterface
 {
     /**
-     * インスタンス生成
+     * create instance
      *
      * @param string $type リクエストタイプ
      * @return Factory
@@ -21,10 +27,10 @@ interface FactoryInterface
     public function create($type);
 
     /**
-     * リクエスト
+     * execute request
      *
      * @param mixed $arg 引数
      * @return array
      */
-    public function request($arg);
+    public function exec($arg);
 }

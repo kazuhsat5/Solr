@@ -1,9 +1,15 @@
 <?php
 
+/**
+ * PHP Solr Client
+ *
+ * @copyright Copyright (C) 2015 kazuhsat All Rights Reserved.
+ */
+
 namespace Sugar\Solr;
 
 /**
- * 例外クラス
+ * Exception
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */

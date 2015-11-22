@@ -1,55 +1,62 @@
 <?php
 
+/**
+ * PHP Solr Client
+ *
+ * @copyright Copyright (C) 2015 kazuhsat All Rights Reserved.
+ */
+
 namespace Sugar\Solr\Request;
 
 use Sugar\Solr;
 use Sugar\Solr\Transport;
 
 /**
- * ファクトリクラス
+ * Factory
  *
  * @author kazuhsat <kazuhsat555@gmail.com>
  */
 class Factory implements FactoryInterface
 {
     /**
-     * クライアントインスタンス
+     * client
      *
      * @var
      */
     private $_client;
 
     /**
-     * トランスポートインスタンス
+     * transport
      *
      * @var
      */
     private $_transport;
 
     /**
-     * リクエストインスタンス
+     * request
      *
      * @var
      */
     private $_request;
 
     /**
-     * コンストラクタ
+     * consturctor
      *
-     * @param ClientInterface $client クライアントインスタンス
-     * @param TransportInterface $transport トランスポートインスタンス
+     * @param ClientInterface $client client
+     * @param TransportInterface $transport transport
      * @return void
      */
-    public function __construct(Solr\ClientInterface $client, Transport\TransportInterface $transport)
+    public function __construct(Solr\ClientInterface $client,
+        Transport\TransportInterface $transport)
     {
         $this->_client = $client;
         $this->_transport = $transport;
     }
 
     /**
-     * インスタンス生成
+     * create instance
      *
-     * @param string $type リクエストタイプ
+     * @param string $type request type
      * @return Factory
      */
     public function create($type)
@@ -74,18 +81,18 @@ class Factory implements FactoryInterface
                 throw new RequestException(sprintf('invalid type. [type=%s]', $type));
         }
 
-        // メソッドチェーンでの利用を可とするために自class返却
+        // using method chain
         return $this;
     }
 
     /**
-     * リクエスト
+     * execute request
      *
-     * @param array $query クエリ配列
+     * @param mixed $arg argument
      * @return array
      */
-    public function request($query)
+    public function request($arg)
     {
-        return $this->_request->exec($query);
+        return $this->_request->exec($arg);
     }
 }

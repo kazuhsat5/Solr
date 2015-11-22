@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * PHP Solr Client
+ *
+ * @copyright Copyright (C) 2015 kazuhsat All Rights Reserved.
+ */
+
 namespace Sugar\Solr\Request;
 
 use Sugar\Solr;
@@ -7,38 +13,45 @@ use Sugar\Solr\Transport;
 use Sugar\Solr\Format;
 
 /**
- * リクエスト基底クラス
+ * Request
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
 abstract class Request implements RequestInterface
 {
     /**
-     * リクエスト名
+     * base url
+     *
+     * @constant
+     */
+    const BASE_URL = 'http://%s:%s/solr/%s/%s';
+
+    /**
+     * path
      *
      * @var
      */
-    protected $_request;
+    protected $_path;
 
     /**
-     * クライアントインスタンス
+     * client
      *
      * @var
      */
     private $_client;
 
     /**
-     * トランスポートインタスタンス
+     * transport
      *
      * @var
      */
     private $_transport;
 
     /**
-     * コンストラクタ
+     * constructor
      *
-     * @param Client $client Clientクラス
-     * @param Transport $transport Transportクラス
+     * @param Client $client Client
+     * @param Transport $transport Transport
      * @return void
      */
     public function __construct(Solr\Client $client, Transport\Transport $transport)
@@ -48,17 +61,17 @@ abstract class Request implements RequestInterface
     }
 
     /**
-     * リクエスト
+     * exec
      *
-     * @param array $query クエリ配列
+     * @param array $query params
      * @return mixed
      * @throw RequestException
      */
-    public function exec(array $query = [])
+    public function exec(array $params)
     {
-        $url = $this->_createUrl($query);
-
-        $result = $this->_transport->exec($url);
+    var_dump($params);
+        var_dump($this->_createUrl($params));
+        $result = $this->_transport->exec($this->_createUrl($params));
         if ($result === false) {
             throw new RequestException(printf('failed getting response.[url=%s]', $url));
         }
@@ -67,17 +80,17 @@ abstract class Request implements RequestInterface
     }
 
     /**
-     * リクエスト先URLを生成する
+     * create URL
      *
      * @see _decode()
-     * @param array $query クエリ配列
-     * @return string JSON文字列
+     * @param array $params parameters
+     * @return string JSON
      */
-    protected function _createUrl(array $query = [])
+    protected function _createUrl(array $params)
     {
-        $url = sprintf('http://%s:%s/solr/%s/%s', $this->_client->getHost(),
-            $this->_client->getPort(), $this->_client->getCore(), $this->_request);
+        $url = sprintf(self::BASE_URL, $this->_client->getHost(),
+            $this->_client->getPort(), $this->_client->getCore(), $this->_path);
 
-        return $url . '?' . http_build_query($query);
+        return $url . '?' . http_build_query($params);
     }
 }

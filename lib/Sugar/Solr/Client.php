@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * PHP Solr Client
+ *
+ * @copyright Copyright (C) 2015 kazuhsat All Rights Reserved.
+ */
+
 namespace Sugar\Solr;
 
 use Sugar\Solr\Request;
@@ -7,47 +13,46 @@ use Sugar\Solr\Transport;
 use Sugar\Solr\Format;
 
 /**
- * クライアントクラス
- * Solrクライアントサービス(ファサード)クラス
+ * Client Class
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
 class Client implements ClientInterface
 {
     /**
-     * ホスト名
+     * host
      *
      * @var
      */
     private $_host;
 
     /**
-     * コア名
+     * core
      *
      * @var
      */
     private $_core;
 
     /**
-     * ポート番号
+     * port
      *
      * @var
      */
     private $_port;
 
     /**
-     * ファクトリインスタンス
+     * factory
      *
      * @var
      */
     private $_factory;
 
     /**
-     * コンストラクタ
+     * constructor
      *
-     * @param string $host ホスト名
-     * @param string $core コア名
-     * @param integer $port ポート番号(デフォルト:8983)
+     * @param string $host host
+     * @param string $core core
+     * @param integer $port port(default: 8983)
      * @return void
      */
     public function __construct($host, $core, $port = 8983)
@@ -60,81 +65,25 @@ class Client implements ClientInterface
     }
 
     /**
-     * ドキュメントの検索
+     * __call
      *
-     * @param array $query クエリ配列
+     * @param string $name method
+     * @param array $arguments argumetns
      * @return array
-     * @throws ClientException
+     * @throw ClientException
      */
-    public function select(array $query)
-    {
-        return $this->_request('select', $query);
-    }
-
-    /**
-     * ドキュメントの追加・更新
-     *
-     * @param string $document ドキュメント(XML, JSON文字列)
-     * @return array
-     * @throws ClientException
-     */
-    public function update($document)
-    {
-    }
-
-    /**
-     * ヘルスチェック
-     *
-     * @return array
-     * @throws ClientException
-     */
-    public function ping()
-    {
-        return $this->_request('ping');
-    }
-
-    /**
-     * バイナリファイルのアップロード
-     *
-     * @return array
-     * @throws ClientException
-     */
-    public function extract()
-    {
-    }
-
-    /**
-     * システム情報
-     *
-     * @return array
-     * @throws ClientException
-     */
-    public function system()
-    {
-        return $this->_request('system');
-    }
-
-    /**
-     * リクエスト
-     *
-     * @param string $type タイプ
-     * @param array $query クエリ配列
-     * @return array
-     * @throws ClientException
-     */
-    private function _request($type, $query = [])
+    public function __call($name, $arguments)
     {
         try {
-            // SolrレスポンスをJSON形式で受け取りPHP配列で返却
-            $query['wt'] = 'json';
+            $arguments[0]['wt'] = 'json';   # return JSON from api
 
-            // インスタンス生成
-            $this->_factory->create($type);
+            $result = json_decode($this->_factory->create($name)->request($arguments[0]), true);
+            if (is_null($result)) {
+                throw FormatException(sprintf('request failed.[request=%s]', $name));
+            }
 
-            // リクエスト
-            return Format\Json::decode($this->_factory->request($query));
+            return $result;
         } catch (Exception $e) {
-            // 例外集約
             throw new ClientException($e->getMessage());
         }
     }

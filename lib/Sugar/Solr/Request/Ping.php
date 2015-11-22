@@ -1,18 +1,24 @@
 <?php
 
+/**
+ * PHP Solr Client
+ *
+ * @copyright Copyright (C) 2015 kazuhsat All Rights Reserved.
+ */
+
 namespace Sugar\Solr\Request;
 
 /**
- * pingクラス
+ * Ping
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
 class Ping extends Request
 {
     /**
-     * リクエスト名
+     * path
      *
      * @var
      */
-    protected $_request = 'admin/ping';
+    protected $_path = 'admin/ping';
 }

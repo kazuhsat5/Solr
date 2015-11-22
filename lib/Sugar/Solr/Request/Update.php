@@ -2,10 +2,8 @@
 
 namespace Sugar\Solr\Request;
 
-use Sugar\Solr;
-
 /**
- * Updateクラス
+ * updateクラス
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
@@ -18,17 +16,20 @@ class Update extends Request
      */
     protected $_request = 'update';
 
+
+    // curl http://localhost:8983/solr/test/update/json?commit=true -H 'Content-type:application/json' -d '{"add" : {"doc" : {"id" : "6", "name" : "ito"}}}'
+
     /**
      * リクエスト
-     *
-     * @param string $document ドキュメント(XML, JSON形式文字列)
-     * @return mixed
      */
-    public function exec($document)
+    public function exec($query)
     {
-        if (is_string($document)) {
-            throw new RequestException('Invalid parameter type.');
-        }
+        $this->_transport->setHeader($query['header']);
+        $this->_transport->setData($query['document']);
 
+        unset($document['document'];
+        unset($document['header'];
+
+       
     }
 }

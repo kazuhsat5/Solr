@@ -3,7 +3,7 @@
 namespace Sugar\Solr\Request;
 
 /**
- * リクエストインターフェース
+ * Request Interface
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
