@@ -69,8 +69,6 @@ abstract class Request implements RequestInterface
      */
     public function exec(array $params)
     {
-    var_dump($params);
-        var_dump($this->_createUrl($params));
         $result = $this->_transport->exec($this->_createUrl($params));
         if ($result === false) {
             throw new RequestException(printf('failed getting response.[url=%s]', $url));
