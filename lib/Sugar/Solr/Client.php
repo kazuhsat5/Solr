@@ -87,10 +87,23 @@ class Client implements ClientInterface
         try {
             $arguments[0]['wt'] = $this->_format;
 
-            return $this->_decode($this->_request->create($name)->exec($arguments[0]), true);
+            return $this->_decode($this->_getData($name, $arguments[0]));
         } catch (Exception $e) {
             throw new ClientException($e->getMessage());
         }
+    }
+
+    /**
+     * get data
+     *
+     * @param string $reuqest request
+     * @param mixed $params parameters
+     * @return array
+     * @throws RequestException
+     */
+    private function _getData($request, $params)
+    {
+        return $this->_request->create($request)->exec($params);
     }
 
     /**
@@ -98,12 +111,13 @@ class Client implements ClientInterface
      *
      * @param string $data data
      * @return array
+     * @throws FormatException
      */
     private function _decode($data)
     {
-        $class = __NAMESPACE__ . '\Format\\' . ucfirst($this->_format);
+        $class = 'Solr\Sugar\Format\\' . ucfirst($this->_format);
         if (!class_exists($class)) {
-            throw new ClassNotFoundException(sprintf('class not found.[class=%s]'));
+            throw new ClassNotFoundException(sprintf('class not found.[class=%s]', $class));
         }
 
         return $class::decode($data);
