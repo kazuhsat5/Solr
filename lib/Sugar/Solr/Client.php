@@ -70,7 +70,7 @@ class Client implements ClientInterface
      * @param string $name method
      * @param array $arguments argumetns
      * @return array
-     * @throw ClientException
+     * @throws ClientException
      */
     public function __call($name, $arguments)
     {
