@@ -22,7 +22,7 @@ class Curl implements TransportInterface
      * @return array
      * @throw TransportException
      */
-    public static function exec($url)
+    public function exec($url)
     {
         $result = [];
 
