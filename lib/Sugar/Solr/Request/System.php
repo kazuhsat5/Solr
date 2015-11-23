@@ -21,4 +21,14 @@ class System extends Request
      * @var
      */
     protected $_path = 'admin/system';
+
+    /**
+     * execute
+     *
+     * @return array
+     */
+    public function exec()
+    {
+        return $this->_get();
+    }
 }

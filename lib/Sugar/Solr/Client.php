@@ -8,7 +8,6 @@
 
 namespace Sugar\Solr;
 
-use Sugar\Solr\Request;
 use Sugar\Solr\Transport;
 
 /**
@@ -40,11 +39,11 @@ class Client implements ClientInterface
     private $_port;
 
     /**
-     * request
+     * transport
      *
      * @var
      */
-    private $_request;
+    private $_transport;
 
     /**
      * constructor
@@ -60,7 +59,8 @@ class Client implements ClientInterface
         $this->_core = $core;
         $this->_port = $port;
 
-        $this->_request = new Request\Factory($this, new Transport\Curl());
+        // default: cURL
+        $this->_transport = new Transport\Curl();
     }
 
     /**
@@ -74,26 +74,17 @@ class Client implements ClientInterface
     public function __call($name, $arguments)
     {
         try {
-            // response format: json
-            $arguments[0]['wt'] = 'json';
+            $class = 'Sugar\Solr\Request\\' . ucfirst($name);
+            if (!class_exists($class)) {
+                throw new ClassNotFoundException(sprintf('class not found. [class=%s]', $class));
+            }
 
-            return json_decode($this->_getData($name, $arguments[0]), true);
+            $request = new $class($this, $this->_transport);
+
+            return $request->exec($arguments);
         } catch (Exception $e) {
             throw new ClientException($e->getMessage());
         }
-    }
-
-    /**
-     * get data
-     *
-     * @param string $reuqest request
-     * @param mixed $params parameters
-     * @return array
-     * @throws RequestException
-     */
-    private function _getData($request, $params)
-    {
-        return $this->_request->create($request)->exec($params);
     }
 
     public function getHost()
@@ -111,8 +102,8 @@ class Client implements ClientInterface
         return (int) $this->_port;
     }
 
-    public function setFactory(Request\FactoryInterface $factory)
+    public function setTransport(Transport\TransportInterface $transport)
     {
-        $this->_factory = $factory;
+        $this->_transport = $transport;
     }
 }

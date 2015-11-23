@@ -21,4 +21,14 @@ class Ping extends Request
      * @var
      */
     protected $_path = 'admin/ping';
+
+    /**
+     * execute
+     *
+     * @return array
+     */
+    public function exec()
+    {
+        return $this->_get();
+    }
 }

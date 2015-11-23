@@ -14,7 +14,7 @@ class Update extends Request
      *
      * @var
      */
-    protected $_request = 'update';
+    protected $_path = 'update/json';
 
 
     // curl http://localhost:8983/solr/test/update/json?commit=true -H 'Content-type:application/json' -d '{"add" : {"doc" : {"id" : "6", "name" : "ito"}}}'
@@ -24,12 +24,9 @@ class Update extends Request
      */
     public function exec($query)
     {
-        $this->_transport->setHeader($query['header']);
-        $this->_transport->setData($query['document']);
+        $data = $query['document'];
+        unset($query['document']);
 
-        unset($document['document'];
-        unset($document['header'];
-
-       
+        return $this->_transport->exec($this->_createUrl($query), 'Content-type:application/json', $data);
     }
 }

@@ -50,31 +50,53 @@ abstract class Request implements RequestInterface
     /**
      * constructor
      *
-     * @param Client $client Client
-     * @param Transport $transport Transport
-     * @return void
+     * @param array $params parameters
+     * @param string $data post data(default: null)
+     * @return array
      */
-    public function __construct(Solr\Client $client, Transport\Transport $transport)
+    public function __construct(Solr\ClientInterface $client, Transport\TransportInterface $transport)
     {
         $this->_client = $client;
+
         $this->_transport = $transport;
     }
 
     /**
-     * exec
+     * execute
+     *
+     * @param array $arguments
+     * @return array
+     */
+     /*
+    public function exec(array $arguments) {
+        var_dump('test');
+    }
+    */
+
+    /**
+     * _get
      *
      * @param array $query params
-     * @return mixed
+     * @return array
      * @throw RequestException
      */
-    public function exec(array $params)
+    protected function _get(array $params = [])
     {
-        $result = $this->_transport->exec($this->_createUrl($params));
-        if ($result === false) {
-            throw new RequestException(printf('failed getting response.[url=%s]', $url));
-        }
+        $params['wt'] = 'json';
 
-        return $result;
+        return json_decode($this->_transport->get($this->_createUrl($params)), true);
+    }
+
+    /**
+     * _post
+     *
+     * @param array $params parameters
+     * @param string $data post data
+     * @return array
+     */
+    protected function _post(array $params, $header, $data)
+    {
+        return $this->_transport->post($this->_createUrl($params), $header, $data);
     }
 
     /**
@@ -84,7 +106,7 @@ abstract class Request implements RequestInterface
      * @param array $params parameters
      * @return string JSON
      */
-    protected function _createUrl(array $params)
+    private function _createUrl(array $params)
     {
         $url = sprintf(self::BASE_URL, $this->_client->getHost(),
             $this->_client->getPort(), $this->_client->getCore(), $this->_path);

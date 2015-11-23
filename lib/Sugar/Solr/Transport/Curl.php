@@ -16,13 +16,13 @@ namespace Sugar\Solr\Transport;
 class Curl implements TransportInterface
 {
     /**
-     * execute
+     * get
      *
      * @param string $url URL
      * @return array
      * @throw TransportException
      */
-    public function exec($url)
+    public function get($url)
     {
         $result = [];
 
@@ -30,6 +30,40 @@ class Curl implements TransportInterface
 
         curl_setopt($ch, CURLOPT_URL, $url); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        return $result;
+    }
+
+    /**
+     * post
+     *
+     * @param string $url URL
+     * @return array
+     * @throw TransportException
+     */
+    public function post($url, $header = null, $data = null)
+    {
+        if (empty($header)) {
+            throw new InvalidParameterException('');
+        }
+
+        if (empty($data)) {
+            throw new InvalidParameterException('');
+        }
+
+        $result = [];
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
         $result = curl_exec($ch);
 

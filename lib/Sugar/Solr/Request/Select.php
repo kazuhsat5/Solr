@@ -21,4 +21,19 @@ class Select extends Request
      * @var
      */
     protected $_path = 'select';
+
+    /**
+     * execute
+     *
+     * @param array $arguments
+     * @return array
+     */
+    public function exec(array $arguments)
+    {
+        if (!is_array($arguments[0])) {
+            throw new RequestException(sprintf('invalid first argument. [argument=%s]', $arguments[0]));
+        }
+
+        return $this->_get($arguments[0]);
+    }
 }

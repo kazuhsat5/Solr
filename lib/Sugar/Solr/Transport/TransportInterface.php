@@ -15,11 +15,4 @@ namespace Sugar\Solr\Transport;
  */
 interface TransportInterface
 {
-    /**
-     * execute
-     *
-     * @param string $url URL
-     * @return array
-     */
-    public function exec($url);
 }
