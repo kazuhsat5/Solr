@@ -74,6 +74,7 @@ class Client implements ClientInterface
     public function __call($name, $arguments)
     {
         try {
+            // response format: json
             $arguments[0]['wt'] = 'json';
 
             return json_decode($this->_getData($name, $arguments[0]), true);
