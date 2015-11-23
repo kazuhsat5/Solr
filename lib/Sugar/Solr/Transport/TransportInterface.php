@@ -3,17 +3,17 @@
 namespace Sugar\Solr\Transport;
 
 /**
- * トランスポートインターフェース
+ * Transport Interface
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
 interface TransportInterface
 {
     /**
-     * 実行
+     * execute
      *
      * @param string $url URL
      * @return array
      */
-    public static function exec($url);
+    public function exec($url);
 }

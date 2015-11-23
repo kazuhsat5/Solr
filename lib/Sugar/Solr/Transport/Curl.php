@@ -3,18 +3,18 @@
 namespace Sugar\Solr\Transport;
 
 /**
- * cURLクラス
+ * cURL
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
-class Curl extends Transport
+class Curl implements TransportInterface
 {
     /**
-     * 実行
+     * execute
      *
      * @param string $url URL
      * @return array
-     * @throw TransportException cURL実行失敗時
+     * @throw TransportException
      */
     public static function exec($url)
     {
@@ -26,7 +26,7 @@ class Curl extends Transport
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $result = curl_exec($ch);
-var_dump($result);
+
         curl_close($ch);
 
         return $result;
