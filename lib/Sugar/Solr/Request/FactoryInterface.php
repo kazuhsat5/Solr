@@ -22,7 +22,7 @@ interface FactoryInterface
      * create instance
      *
      * @param string $type request type
-     * @return Factory
+     * @return FactoryInterface
      */
     public function create($type);
 
