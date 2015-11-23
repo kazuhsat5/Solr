@@ -1,11 +1,17 @@
 <?php
 
+/**
+ * PHP Solr Client
+ *
+ * @copyright Copyright (C) 2015 kazuhsat All Rights Reserved.
+ */
+
 namespace Sugar\Solr\Transport;
 
 use Sugar\Solr;
 
 /**
- * トランスポート例外クラス
+ * TransportException
  *
  * @author kazuhsat <kazuhsat5@gmail.com>
  */
