@@ -20,7 +20,6 @@ class Curl implements TransportInterface
      *
      * @param string $url URL
      * @return array
-     * @throw TransportException
      */
     public function get($url)
     {
@@ -42,17 +41,19 @@ class Curl implements TransportInterface
      * post
      *
      * @param string $url URL
+     * @param string $header header
+     * @param string $data data
      * @return array
-     * @throw TransportException
+     * @throws InvalidParameterException
      */
     public function post($url, $header = null, $data = null)
     {
         if (empty($header)) {
-            throw new InvalidParameterException('');
+            throw new InvalidParameterException(sprintf('invalid parameter. [header=%s]', $header));
         }
 
         if (empty($data)) {
-            throw new InvalidParameterException('');
+            throw new InvalidParameterException(sprintf('invalid parameter. [data=%s]', $data));
         }
 
         $result = [];

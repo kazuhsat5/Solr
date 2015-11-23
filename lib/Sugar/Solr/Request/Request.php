@@ -96,7 +96,7 @@ abstract class Request implements RequestInterface
      */
     protected function _post(array $params, $header, $data)
     {
-        return $this->_transport->post($this->_createUrl($params), $header, $data);
+        return $this->_transport->post($this->_createUrl($params), 'Content-type    :application/json', $data);
     }
 
     /**

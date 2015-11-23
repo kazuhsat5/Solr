@@ -16,17 +16,15 @@ class Update extends Request
      */
     protected $_path = 'update/json';
 
-
-    // curl http://localhost:8983/solr/test/update/json?commit=true -H 'Content-type:application/json' -d '{"add" : {"doc" : {"id" : "6", "name" : "ito"}}}'
-
     /**
-     * リクエスト
+     * execute
      */
-    public function exec($query)
+    public function exec(array $arguments)
     {
-        $data = $query['document'];
-        unset($query['document']);
+        if (is_string($arguments[0])) {
+            throw new InvalidParameterException('');
+        }
 
-        return $this->_transport->exec($this->_createUrl($query), 'Content-type:application/json', $data);
+        return $this->_post($this->_createUrl($query), $arguments[0]);
     }
 }

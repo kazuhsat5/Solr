@@ -15,4 +15,22 @@ namespace Sugar\Solr\Transport;
  */
 interface TransportInterface
 {
+    /**
+     * get
+     *
+     * @param string $url URL
+     * @return array
+     */
+    public function get($url);
+
+    /**
+     * post
+     *
+     * @param string $url URL
+     * @param string $header header
+     * @param string $data data
+     * @return array
+     * @throw InvalidParameterException
+     */
+    public function post($url, $header = null, $data = null);
 }

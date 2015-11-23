@@ -15,9 +15,8 @@ use Sugar\Solr\Request;
  *
  * following list of method:
  *
- * @method array select($params = [])
+ * @method array select(array $params)
  * @method array update($document)
- * @method array extract($document)
  * @method array ping()
  * @method array system()
  *
