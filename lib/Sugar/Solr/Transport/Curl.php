@@ -20,8 +20,9 @@ class Curl implements TransportInterface
      *
      * @param string $url URL
      * @return array
+     * @throws TransportException
      */
-    public function get($url)
+    public static function get($url)
     {
         $result = [];
 
@@ -32,6 +33,12 @@ class Curl implements TransportInterface
 
         $result = curl_exec($ch);
 
+        $errno = curl_errno($ch);
+        if ($errno !== 0) {
+            curl_close($ch);
+            throw new TransportException(sprintf('curl error. [errno=%s]', $errno));
+        }
+
         curl_close($ch);
 
         return $result;
@@ -40,13 +47,14 @@ class Curl implements TransportInterface
     /**
      * post
      *
-     * @param string $url URL
+     * @param string $url    URL
      * @param string $header header
-     * @param string $data data
+     * @param string $data   data
      * @return array
      * @throws InvalidParameterException
+     * @throws TransportException
      */
-    public function post($url, $header = null, $data = null)
+    public static function post($url, $header, $data)
     {
         if (empty($header)) {
             throw new InvalidParameterException(sprintf('invalid parameter. [header=%s]', $header));
@@ -67,6 +75,12 @@ class Curl implements TransportInterface
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
         $result = curl_exec($ch);
+
+        $errno = curl_errno($ch);
+        if ($errno !== 0) {
+            curl_close($ch);
+            throw new TransportException(sprintf('curl error. [errno=%s]', $errno));
+        }
 
         curl_close($ch);
 

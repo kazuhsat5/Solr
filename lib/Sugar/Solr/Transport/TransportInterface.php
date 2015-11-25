@@ -9,7 +9,7 @@
 namespace Sugar\Solr\Transport;
 
 /**
- * Transport Interface
+ * TransportInterface
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
@@ -20,17 +20,19 @@ interface TransportInterface
      *
      * @param string $url URL
      * @return array
+     * @throws TransportException
      */
-    public function get($url);
+    public static function get($url);
 
     /**
      * post
      *
-     * @param string $url URL
+     * @param string $url    URL
      * @param string $header header
-     * @param string $data data
+     * @param string $data   data
      * @return array
-     * @throw InvalidParameterException
+     * @throws InvalidParameterException
+     * @throws TransportException
      */
-    public function post($url, $header = null, $data = null);
+    public static function post($url, $header, $data);
 }

@@ -10,7 +10,6 @@ namespace Sugar\Solr\Request;
 
 use Sugar\Solr;
 use Sugar\Solr\Transport;
-use Sugar\Solr\Format;
 
 /**
  * Request
@@ -19,13 +18,6 @@ use Sugar\Solr\Format;
  */
 abstract class Request implements RequestInterface
 {
-    /**
-     * base url
-     *
-     * @constant
-     */
-    const BASE_URL = 'http://%s:%s/solr/%s/%s';
-
     /**
      * path
      *
@@ -50,28 +42,23 @@ abstract class Request implements RequestInterface
     /**
      * constructor
      *
-     * @param array $params parameters
-     * @param string $data post data(default: null)
+     * @param array  $params parameters
+     * @param string $data   data(default: null)
      * @return array
      */
     public function __construct(Solr\ClientInterface $client, Transport\TransportInterface $transport)
     {
         $this->_client = $client;
-
         $this->_transport = $transport;
     }
 
     /**
      * execute
      *
-     * @param array $arguments
+     * @param array $arguments arguments
      * @return array
      */
-     /*
-    public function exec(array $arguments) {
-        var_dump('test');
-    }
-    */
+    abstract public function exec(array $arguments = []);
 
     /**
      * _get
@@ -96,20 +83,23 @@ abstract class Request implements RequestInterface
      */
     protected function _post(array $params, $header, $data)
     {
-        return $this->_transport->post($this->_createUrl($params), 'Content-type    :application/json', $data);
+        return json_decode($this->_transport->post($this->_createUrl($params), 'Content-type:application/json', $data), true);
     }
 
     /**
      * create URL
      *
-     * @see _decode()
      * @param array $params parameters
-     * @return string JSON
+     * @return string
      */
-    private function _createUrl(array $params)
+    private function _createUrl(array $params = [])
     {
-        $url = sprintf(self::BASE_URL, $this->_client->getHost(),
+        $url = sprintf('http://%s:%s/solr/%s/%s', $this->_client->getHost(),
             $this->_client->getPort(), $this->_client->getCore(), $this->_path);
+
+        if (empty($params)) {
+            return $url;
+        }
 
         return $url . '?' . http_build_query($params);
     }

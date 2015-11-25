@@ -11,7 +11,7 @@ namespace Sugar\Solr;
 use Sugar\Solr\Transport;
 
 /**
- * Client Class
+ * Client
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
@@ -39,52 +39,77 @@ class Client implements ClientInterface
     private $_port;
 
     /**
-     * transport
+     * factory
      *
      * @var
      */
-    private $_transport;
+    private $_factory
 
     /**
      * constructor
      *
-     * @param string $host host
-     * @param string $core core
+     * @param string  $host host
+     * @param string  $core core
      * @param integer $port port (default: 8983)
      * @return void
+     * @throws InvalidArgumentException
      */
     public function __construct($host, $core, $port = 8983)
     {
-        $this->_host = $host;
-        $this->_core = $core;
-        $this->_port = $port;
+        $this->setHost($host);
+        $this->setCore($core);
+        $this->setPort($port);
 
-        // default: cURL
-        $this->_transport = new Transport\Curl();
+        $this->_factory = new Request\Factory($this, new Transport\Curl());
     }
 
     /**
      * __call
      *
-     * @param string $name method
-     * @param array $arguments arguments
+     * @param string $name      method
+     * @param array  $arguments arguments
      * @return array
      * @throws ClientException
      */
     public function __call($name, $arguments)
     {
         try {
-            $class = 'Sugar\Solr\Request\\' . ucfirst($name);
-            if (!class_exists($class)) {
-                throw new ClassNotFoundException(sprintf('class not found. [class=%s]', $class));
-            }
-
-            $request = new $class($this, $this->_transport);
-
-            return $request->exec($arguments);
+            $this->_factory->create($name)->exec($arguments);
         } catch (Exception $e) {
             throw new ClientException($e->getMessage());
         }
+    }
+
+    public function setHost($host)
+    {
+        if (empty($host)) {
+            throw new \InvalidArgumentException(sprintf('invalid parameter. [host=%s]', $host));
+        }
+
+        $this->_host = $host;
+    }
+
+    public function setCore($core)
+    {
+        if (empty($core)) {
+            throw new \InvalidArgumentException(sprintf('invalid parameter. [core=%s]', $core));
+        }
+
+        $this->_core = $core;
+    }
+
+    public function setPort($port)
+    {
+        if (empty($port) && ctype_digit($port)) {
+            throw new \InvalidArgumentException(sprintf('invalid parameter. [port=%s]', $port));
+        }
+
+        $this->_port = (int) $port;
+    }
+
+    public function setFactory(Request\FactoryInterface $factory)
+    {
+        $this->_factory = $factory;
     }
 
     public function getHost()
@@ -100,10 +125,5 @@ class Client implements ClientInterface
     public function getPort()
     {
         return (int) $this->_port;
-    }
-
-    public function setTransport(Transport\TransportInterface $transport)
-    {
-        $this->_transport = $transport;
     }
 }

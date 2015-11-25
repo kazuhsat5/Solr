@@ -11,7 +11,7 @@ namespace Sugar\Solr;
 use Sugar\Solr\Request;
 
 /**
- * Client Interface
+ * ClientInterface
  *
  * following list of method:
  *
@@ -27,10 +27,10 @@ interface ClientInterface
     /**
      * __call
      *
-     * @param string $name method
-     * @param array $arguments argumetns
+     * @param string $name      method
+     * @param array  $arguments arguments
      * @return array
-     * @throw ClientException
+     * @throws ClientException
      */
     public function __call($name, $arguments);
 }

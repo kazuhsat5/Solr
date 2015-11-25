@@ -9,17 +9,18 @@
 namespace Sugar\Solr\Request;
 
 /**
- * RequestInterface
+ * FactoryInterface
  *
  * @author kazuhsat <kazuhsat@gmail.com>
  */
-interface RequestInterface
+implements FactoryInterface
 {
     /**
-     * execute
+     * create
      *
-     * @param array $arguments arguments
-     * @return array
+     * @param string $name request name
+     * @return RequestInterface
+     * @throws RquestException
      */
-    public function exec(array $arguments = []);
+    public function create($name);
 }

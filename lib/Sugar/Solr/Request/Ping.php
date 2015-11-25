@@ -25,10 +25,11 @@ class Ping extends Request
     /**
      * execute
      *
+     * @param array $arguments arguments
      * @return array
      */
-    public function exec()
+    public function exec(array $arguments = [])
     {
-        return $this->_get();
+        return $this->_get($arguments);
     }
 }

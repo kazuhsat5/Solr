@@ -1,20 +1,23 @@
 <?php
 
-define('HOST', 'localhost');
-define('CORE', 'test');
-define('PORT', 8983);
-
 require_once './bootstrap.php';
 
 use Sugar\Solr;
 
+define('HOST', 'localhost');
+define('CORE', 'test');
+define('PORT', 8983);
+
 $client = new Solr\Client(HOST, CORE, PORT);
 
 // select
-var_dump($client->select(['q' => 'name:sato']));
+echo $client->select(['q' => 'name:sato']) . PHP_EOL;
 
-// ping
-//var_dump($client->ping());
+// update
+//echo $client->update(['document' => '{"add" : {"doc" : {"id" : "12", "name" : "kikuchi"}}}']) . PHP_EOL;
 
-//system
-//var_dump($client->system());
+// admin/ping
+//echo client->ping() . PHP_EOL;
+
+// admin/system
+//echo $client->system() . PHP_EOL;

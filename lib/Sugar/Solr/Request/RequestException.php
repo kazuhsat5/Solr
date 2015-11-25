@@ -11,7 +11,7 @@ namespace Sugar\Solr\Request;
 use Sugar\Solr;
 
 /**
- * Request Exception
+ * RequestException
  *
  * @author kazuhsat <kazuhsat5@gmail.com>
  */
