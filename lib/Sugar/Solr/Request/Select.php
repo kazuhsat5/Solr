@@ -16,7 +16,7 @@ namespace Sugar\Solr\Request;
 class Select extends Request
 {
     /**
-     * phth
+     * path
      *
      * @var
      */
