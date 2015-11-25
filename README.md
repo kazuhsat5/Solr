@@ -1,4 +1,4 @@
-# Solr
+# PHP Solr Client
 ### Loading the Library ###
 ```php
 reqire 'Solr¥Autoloader.php'
