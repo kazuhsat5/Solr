@@ -3,7 +3,7 @@
 ```php
 reqire 'Solr\Autoloader.php'
 
-Solr¥Autoloader::register();
+Solr\Autoloader::register();
 ```
 ### Connecting to Solr Server ###
 ```php
