@@ -56,9 +56,9 @@ class Client implements ClientInterface
      */
     public function __construct($host, $core, $port = 8983)
     {
-        $this->_host;
-        $this->_core;
-        $this->_port;
+        $this->_host = $host;
+        $this->_core = $core;
+        $this->_port = $port;
         if (empty($host) || empty($core) || empty($port)) {
             throw new \InvalidArgumentException('invalid parameter.');
         }
