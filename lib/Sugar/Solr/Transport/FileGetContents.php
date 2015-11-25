@@ -47,6 +47,14 @@ class FileGetContents implements TransportInterface
      */
     public static function post($url, $header, $data)
     {
+        if (empty($header)) {
+            throw new InvalidParameterException(sprintf('invalid parameter. [header=%s]', $header));
+        }
+
+        if (empty($data)) {
+            throw new InvalidParameterException(sprintf('invalid parameter. [data=%s]', $data));
+        }
+
         $opts['http'] = [
             'method'  => 'POST',
             'header'  => $header,
