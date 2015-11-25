@@ -10,11 +10,11 @@ namespace Sugar\Solr\Request;
 class Update extends Request
 {
     /**
-     * リクエスト名
+     * path
      *
      * @var
      */
-    protected $_path = 'update/json';
+    protected $_path = 'update';
 
     /**
      * execute
