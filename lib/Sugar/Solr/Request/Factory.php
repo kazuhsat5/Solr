@@ -8,6 +8,9 @@
 
 namespace Sugar\Solr\Request;
 
+use Sugar\Solr;
+use Sugar\Solr\Transport;
+
 /**
  * Factory
  *
@@ -58,7 +61,7 @@ class Factory implements FactoryInterface
      */
     public function create($name)
     {
-        $class = ucfirst($name);
+        $class = 'Sugar\Solr\Request\\' . ucfirst($name);
         if (!class_exists($class)) {
             throw new RequestException(sprintf('class not found. [class=%s]', $name));
         }

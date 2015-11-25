@@ -11,13 +11,13 @@ define('PORT', 8983);
 $client = new Solr\Client(HOST, CORE, PORT);
 
 // select
-echo $client->select(['q' => 'name:sato']) . PHP_EOL;
+echo print_r($client->select(['q' => 'name:sato']), true) . PHP_EOL;
 
 // update
 //echo $client->update(['document' => '{"add" : {"doc" : {"id" : "12", "name" : "kikuchi"}}}']) . PHP_EOL;
 
 // admin/ping
-//echo client->ping() . PHP_EOL;
+//echo print_r($client->ping(), true) . PHP_EOL;
 
 // admin/system
-//echo $client->system() . PHP_EOL;
+//echo print_r($client->system(), true) . PHP_EOL;

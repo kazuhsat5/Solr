@@ -43,7 +43,7 @@ class Client implements ClientInterface
      *
      * @var
      */
-    private $_factory
+    private $_factory;
 
     /**
      * constructor
@@ -74,7 +74,7 @@ class Client implements ClientInterface
     public function __call($name, $arguments)
     {
         try {
-            $this->_factory->create($name)->exec($arguments);
+            return $this->_factory->create($name)->exec($arguments);
         } catch (Exception $e) {
             throw new ClientException($e->getMessage());
         }
