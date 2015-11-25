@@ -65,7 +65,7 @@ abstract class Request implements RequestInterface
      *
      * @param array $query params
      * @return array
-     * @throw RequestException
+     * @throws RequestException
      */
     protected function _get(array $params = [])
     {
@@ -80,6 +80,7 @@ abstract class Request implements RequestInterface
      * @param array $params parameters
      * @param string $data post data
      * @return array
+     * @throws RequestException
      */
     protected function _post(array $params, $header, $data)
     {
