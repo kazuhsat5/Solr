@@ -56,9 +56,12 @@ class Client implements ClientInterface
      */
     public function __construct($host, $core, $port = 8983)
     {
-        $this->setHost($host);
-        $this->setCore($core);
-        $this->setPort($port);
+        $this->_host;
+        $this->_core;
+        $this->_port;
+        if (empty($host) || empty($core) || empty($port)) {
+            throw new \InvalidArgumentException('invalid parameter.');
+        }
 
         $this->_factory = new Request\Factory($this, new Transport\Curl());
     }
@@ -78,33 +81,6 @@ class Client implements ClientInterface
         } catch (Exception $e) {
             throw new ClientException($e->getMessage());
         }
-    }
-
-    public function setHost($host)
-    {
-        if (empty($host)) {
-            throw new \InvalidArgumentException(sprintf('invalid parameter. [host=%s]', $host));
-        }
-
-        $this->_host = $host;
-    }
-
-    public function setCore($core)
-    {
-        if (empty($core)) {
-            throw new \InvalidArgumentException(sprintf('invalid parameter. [core=%s]', $core));
-        }
-
-        $this->_core = $core;
-    }
-
-    public function setPort($port)
-    {
-        if (empty($port) && ctype_digit($port)) {
-            throw new \InvalidArgumentException(sprintf('invalid parameter. [port=%s]', $port));
-        }
-
-        $this->_port = (int) $port;
     }
 
     public function setFactory(Request\FactoryInterface $factory)
