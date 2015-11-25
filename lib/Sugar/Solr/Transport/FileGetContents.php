@@ -15,7 +15,6 @@ namespace Sugar\Solr\Transport;
  */
 class FileGetContents implements TransportInterface
 {
-
     /**
      * get
      *
